@@ -21,18 +21,19 @@ import java.util.List;
 
 public class NoteController {
 
-    @Autowired
-    NoteRepository notesRepository;
 
     @Autowired
     NoteService noteService;
 
 
+    // Retrieve the notes
     @GetMapping("/getNotesById")
     public List<NoteEntity> getNotes(@RequestParam(name = "noteId") int noteId) {
        return noteService.getNote(noteId);
     }
 
+
+    //Create the note
 
     @PostMapping("/saveNote")
     public ResponseEntity<Response> saveNote(@Valid @RequestBody NoteUser noteUser ) {
@@ -40,6 +41,7 @@ public class NoteController {
         NoteEntity note=noteUser.getNoteEntity();
         UserEntity user=noteUser.getUserEntity();
         note.setUserEntity(user);
+        noteService.saveNote(note);
         response.setStatusMsg("Saved successfully");
         response.setStatusCode("200");
         return ResponseEntity
@@ -49,7 +51,7 @@ public class NoteController {
 
     }
 
-
+    //Delete the note
     @DeleteMapping("/deleteNote")
     public ResponseEntity<Response> deleteNote(@RequestParam("noteId") int noteId) {
         return noteService.deleteNote(noteId);
